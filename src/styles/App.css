@@ -5,6 +5,11 @@
   text-align: center;
 }
 
+main {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+}
+
 /* .logo {
   height: 6em;
   padding: 1.5em;

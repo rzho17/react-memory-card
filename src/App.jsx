@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
-import "./App.css";
+import "./styles/App.css";
+import PokemonContainer from "./components/PokemonContainer";
+import { nanoid } from "nanoid";
 
 function App() {
-  const [count, setCount] = useState(0);
-
-  const [pokemonData, setPokemonData] = useState([]);
+  const [allPokemonData, setAllPokemonData] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [pkmContainerData, setPkmContainerData] = useState([]);
 
   const arr = Array.from({ length: 700 }, (_, i) => i);
+
   const shuffeArr = (arr) => {
-    // const newArr = arr.slice(0);
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
 
@@ -22,11 +23,57 @@ function App() {
   };
 
   const shuffled = shuffeArr(arr);
+
   const getPkm = (arr) => {
     return arr.splice(0, 10);
   };
 
-  console.log(getPkm(shuffled));
+  // console.log(getPkm(shuffled));
+
+  const makePkmContainerData = (arr) => {
+    const data = [];
+    // console.log(arr);
+    arr.map((item) => {
+      item.map((pkm) => {
+        const newItem = {
+          name: pkm.name,
+          sprite: pkm.sprites["front_default"],
+          clicked: false,
+          id: nanoid(),
+        };
+        data.push(newItem);
+      });
+    });
+
+    // console.log(data);
+    return data;
+  };
+
+  const toggleId = (item) => {
+    //if id matches
+    //flip the id from false to true
+
+    setPkmContainerData((prevData) => {
+      return prevData.map((pkm) => {
+        if (pkm.id === item.id) {
+          return { ...item, clicked: true };
+        }
+        return pkm;
+      });
+    });
+
+    // console.log(item);
+    // console.log(pkmContainerData);
+  };
+
+  useEffect(() => {
+    const data = makePkmContainerData(allPokemonData);
+    setPkmContainerData(data);
+  }, [allPokemonData]);
+
+  // console.log(allPokemonData);
+  console.log(pkmContainerData);
+
   useEffect(() => {
     const shuffledPkm = getPkm(shuffled);
     const fetchPost = async () => {
@@ -37,58 +84,38 @@ function App() {
           ).then((response) => response.json());
         });
 
-        const pokemonData = await Promise.all(response);
+        const allPokemonData = await Promise.all(response);
 
-        setPokemonData((prevData) => {
-          return [...prevData, pokemonData];
+        setAllPokemonData((prevData) => {
+          return [...prevData, allPokemonData];
         });
         setLoaded(true);
       } catch (error) {
         console.error("Failed to fetch pokemon data", error);
       }
-      // const response = await Array.from({ length: 10 }, (_, i) => {
-      //   fetch(`https://pokeapi.co/api/v2/pokemon/${i + 1}`).then((response) =>
-      //     response.json()
-      //   );
-      // });
-
-      // const pokemonData = await Promise.all(response);
-
-      // setPokemonData((prevData) => {
-      //   return [...prevData, pokemonData];
-      // });
-      // setLoaded(true);
-
-      // for (let i = 1; i <= 10; i++) {
-      //   const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${i}`);
-
-      //   const data = await response.json();
-      //   // console.log(data);
-
-      //   // setPokemonData(data);
-      //   setPokemonData((prevData) => {
-      //     return [...prevData, data];
-      //   });
-      // }
-      // setLoaded(true);
     };
 
     fetchPost();
   }, []);
-  console.log(pokemonData);
-  // const sprite = pokemonData.sprites["front_default"];
 
   if (loaded) {
     return (
       <>
         <h1>Vite + React</h1>
-        {/* <div>{pokemonData[0].sprites["front_default"]}</div> */}
-        {pokemonData[0].map((pkm, idx) => {
-          console.log(`i am ${pkm.name}`);
-          // <div>{pkm.sprites["front_default"]}</div>;
-          return <img key={idx} src={pkm.sprites["front_default"]} alt="" />;
-        })}
-        {/* <img src={pokemonData[0].sprites["front_default"]} alt="" /> */}
+
+        <main>
+          {pkmContainerData.map((pkm) => {
+            return (
+              <PokemonContainer
+                key={pkm.id}
+                pkmData={pkm}
+                func={toggleId}
+                src={pkm.sprite}
+              />
+            );
+          })}
+        </main>
+        {/* <PokemonContainer /> */}
       </>
     );
   }
