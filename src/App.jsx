@@ -3,12 +3,19 @@ import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
 import "./styles/App.css";
 import PokemonContainer from "./components/PokemonContainer";
+import GameScore from "./components/GameScore";
+import Button from "./components/Button";
 import { nanoid } from "nanoid";
 
 function App() {
   const [allPokemonData, setAllPokemonData] = useState([]);
-  const [loaded, setLoaded] = useState(false);
   const [pkmContainerData, setPkmContainerData] = useState([]);
+
+  const [loaded, setLoaded] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+
+  const [currentScore, setCurrentScore] = useState(0);
+  const [hiScore, setHiScore] = useState(0);
 
   const arr = Array.from({ length: 700 }, (_, i) => i);
 
@@ -49,6 +56,35 @@ function App() {
     return data;
   };
 
+  const shuffleContainer = () => {
+    setPkmContainerData((prevData) => shuffeArr(prevData));
+  };
+
+  const resetData = () => {
+    resetScore();
+    setHiScore(hiScore);
+
+    setAllPokemonData([]);
+    setRefresh((prev) => !prev);
+  };
+  // score functions
+
+  const increaseScore = () => {
+    setCurrentScore((prevData) => prevData + 1);
+  };
+
+  const increaseHiScore = () => {
+    if (currentScore >= hiScore) {
+      setHiScore(currentScore + 1);
+    }
+  };
+
+  const resetScore = () => {
+    setCurrentScore(0);
+    setHiScore(0);
+  };
+
+  // game flow functions
   const toggleId = (item) => {
     //if id matches
     //flip the id from false to true
@@ -61,9 +97,27 @@ function App() {
         return pkm;
       });
     });
+  };
 
-    // console.log(item);
-    // console.log(pkmContainerData);
+  const validItem = (obj) => {
+    if (obj.clicked === false) {
+      increaseScore();
+      increaseHiScore();
+    } else {
+      // resetScore();
+      // setHiScore(hiScore);
+
+      // setAllPokemonData([]);
+      // setRefresh((prev) => !prev);
+      resetData();
+    }
+  };
+
+  const gameFlow = (item) => {
+    toggleId(item);
+    // if(item.clicked === true)
+    validItem(item);
+    shuffleContainer();
   };
 
   useEffect(() => {
@@ -96,20 +150,22 @@ function App() {
     };
 
     fetchPost();
-  }, []);
+  }, [refresh]);
 
   if (loaded) {
     return (
       <>
         <h1>Vite + React</h1>
 
+        <GameScore currentScore={currentScore} hiScore={hiScore} />
+        <Button func={resetData} />
         <main>
           {pkmContainerData.map((pkm) => {
             return (
               <PokemonContainer
                 key={pkm.id}
                 pkmData={pkm}
-                func={toggleId}
+                func={gameFlow}
                 src={pkm.sprite}
               />
             );
