@@ -5,6 +5,7 @@ import "./styles/App.css";
 import PokemonContainer from "./components/PokemonContainer";
 import GameScore from "./components/GameScore";
 import Button from "./components/Button";
+import GameScreen from "./components/GameScreen";
 import { nanoid } from "nanoid";
 
 function App() {
@@ -16,6 +17,8 @@ function App() {
 
   const [currentScore, setCurrentScore] = useState(0);
   const [hiScore, setHiScore] = useState(0);
+
+  const [display, setDisplay] = useState(false);
 
   const arr = Array.from({ length: 700 }, (_, i) => i);
 
@@ -66,11 +69,16 @@ function App() {
 
     setAllPokemonData([]);
     setRefresh((prev) => !prev);
+    setDisplay(!display);
   };
   // score functions
 
   const increaseScore = () => {
     setCurrentScore((prevData) => prevData + 1);
+
+    if (currentScore >= 9) {
+      setDisplay(!display);
+    }
   };
 
   const increaseHiScore = () => {
@@ -157,20 +165,33 @@ function App() {
       <>
         <h1>Vite + React</h1>
 
-        <GameScore currentScore={currentScore} hiScore={hiScore} />
-        <Button func={resetData} />
-        <main>
-          {pkmContainerData.map((pkm) => {
-            return (
-              <PokemonContainer
-                key={pkm.id}
-                pkmData={pkm}
-                func={gameFlow}
-                src={pkm.sprite}
-              />
-            );
-          })}
-        </main>
+        {display === false && (
+          <GameScore currentScore={currentScore} hiScore={hiScore} />
+        )}
+        {/* <Button func={resetData} /> */}
+
+        {display === true && (
+          <GameScreen
+            func={resetData}
+            display={currentScore >= 9 ? true : false}
+            score={currentScore}
+          />
+        )}
+
+        {display === false && (
+          <main>
+            {pkmContainerData.map((pkm) => {
+              return (
+                <PokemonContainer
+                  key={pkm.id}
+                  pkmData={pkm}
+                  func={gameFlow}
+                  src={pkm.sprite}
+                />
+              );
+            })}
+          </main>
+        )}
         {/* <PokemonContainer /> */}
       </>
     );
