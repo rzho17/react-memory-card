@@ -112,18 +112,12 @@ function App() {
       increaseScore();
       increaseHiScore();
     } else {
-      // resetScore();
-      // setHiScore(hiScore);
-
-      // setAllPokemonData([]);
-      // setRefresh((prev) => !prev);
       resetData();
     }
   };
 
   const gameFlow = (item) => {
     toggleId(item);
-    // if(item.clicked === true)
     validItem(item);
     shuffleContainer();
   };
@@ -132,9 +126,6 @@ function App() {
     const data = makePkmContainerData(allPokemonData);
     setPkmContainerData(data);
   }, [allPokemonData]);
-
-  // console.log(allPokemonData);
-  console.log(pkmContainerData);
 
   useEffect(() => {
     const shuffledPkm = getPkm(shuffled);
@@ -168,7 +159,6 @@ function App() {
         {display === false && (
           <GameScore currentScore={currentScore} hiScore={hiScore} />
         )}
-        {/* <Button func={resetData} /> */}
 
         {display === true && (
           <GameScreen
@@ -194,7 +184,6 @@ function App() {
             </div>
           </main>
         )}
-        {/* <PokemonContainer /> */}
       </>
     );
   }

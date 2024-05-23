@@ -11,7 +11,7 @@ export default function GameScreen({ func, display, score }) {
           ? `You win! How about one more?`
           : `You lost good try, have another go?`}
       </div>
-      {/* Game over / game win your score is : {score} */}
+
       <Button func={func} name={"reset"} />
     </div>
   );

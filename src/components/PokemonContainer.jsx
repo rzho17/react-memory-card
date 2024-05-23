@@ -1,7 +1,6 @@
 import "../styles/PokemonContainer.css";
 
 export default function PokemonContainer({ pkmData, func, src, name, data }) {
-  // console.log(pkmData.clicked);
   const imgStyle = pkmData.clicked
     ? { backgroundColor: "green" }
     : { backgroundColor: "red" };
