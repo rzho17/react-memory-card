@@ -3,7 +3,6 @@ import Button from "./Button";
 import "../styles/GameScreen.css";
 
 export default function GameScreen({ func, display, score }) {
-  console.log(score);
   return (
     <div className="gameScreen">
       <div>
