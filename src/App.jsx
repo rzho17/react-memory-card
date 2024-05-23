@@ -163,7 +163,7 @@ function App() {
   if (loaded) {
     return (
       <>
-        <h1>Vite + React</h1>
+        <h1>Pokemon Memory Card</h1>
 
         {display === false && (
           <GameScore currentScore={currentScore} hiScore={hiScore} />
@@ -180,16 +180,18 @@ function App() {
 
         {display === false && (
           <main>
-            {pkmContainerData.map((pkm) => {
-              return (
-                <PokemonContainer
-                  key={pkm.id}
-                  pkmData={pkm}
-                  func={gameFlow}
-                  src={pkm.sprite}
-                />
-              );
-            })}
+            <div className="pokemon--container">
+              {pkmContainerData.map((pkm) => {
+                return (
+                  <PokemonContainer
+                    key={pkm.id}
+                    pkmData={pkm}
+                    func={gameFlow}
+                    src={pkm.sprite}
+                  />
+                );
+              })}
+            </div>
           </main>
         )}
         {/* <PokemonContainer /> */}

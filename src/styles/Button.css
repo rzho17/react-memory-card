@@ -1,0 +1,23 @@
+button {
+  padding: 0;
+}
+
+.reset {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #222224;
+  padding: 20px;
+  height: 100px;
+  width: 100px;
+
+  border: 2px solid #222224;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #fe002a 50%, #ffffff 50%);
+}
+
+.reset:hover {
+  cursor: pointer;
+}
